@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <title>Font of tea</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+    <!-- axiso -->
+    <script src="js/axios.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  </head>
+  <body>
+      
+    <!-- 展板 -->
+    <div class="jumbotron jumbotron-fluid" style="background-color: powderblue">
+        <div class="container">
+            <h1 class="display-3 pb-3">Fond of tea</h1>
+            <hr>
+            <h3 class="mt-5"><span class="badge badge-pill badge-primary">开始点单</span></h3>
+        </div>
+    </div>
+
+    <div id="app">
+      <!-- 容器1 -->
+      <div class="container">
+      <!-- 导航 -->
+        <ul class="nav nav-tabs nav-fill">
+          <li class="nav-item">
+            <a class="nav-link" href="/">主页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link  active" href="#">开始点单</a>
+          </li>
+        </ul>
+        <div class="card border-info mt-3">
+          <div class="card-body">
+            <h4 class="card-title text-center">您的订单</h4>
+            <hr>
+            <!-- 选择饮品 -->
+            <div class="form-group">
+              <h5>选择饮品</h5>
+              <select class="form-control" v-model="indentName" name="" id="">
+                <option v-for="drink in drinks">{{drink}}</option>
+              </select>
+            </div>
+            <!-- 规格 -->
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">规格</h5>
+                <div class="row">
+                  <div class="col-lg-4 col-md-4 col-sm-4 my-2">
+                    <button @click="spec(1)" v-if="!large" type="button" name="" id="" class="btn btn-outline-danger btn-block">大杯</button>
+                    <button v-else type="button" name="" id="" class="btn btn-danger btn-block">大杯</button>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-4 my-2">
+                    <button @click="spec(2)" v-if="!medium" type="button" name="" id="" class="btn btn-outline-warning btn-block">中杯</button>
+                    <button v-else type="button" name="" id="" class="btn btn-warning btn-block">中杯</button>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-4 my-2">
+                    <button @click="spec(3)" v-if="!small" type="button" name="" id="" class="btn btn-outline-info btn-block">小杯</button>
+                    <button v-else type="button" name="" id="" class="btn btn-info btn-block">小杯</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 茶温 -->
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">茶温</h5>
+                <div class="row">
+                  <div class="col-lg-4 col-md-4 col-sm-4 my-2">
+                    <button @click="temperature(1)" v-if="!heat" type="button" name="" id="" class="btn btn-outline-danger btn-block">热</button>
+                    <button v-else type="button" name="" id="" class="btn btn-danger btn-block">热</button>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-4 my-2">
+                    <button @click="temperature(2)" v-if="!normal" type="button" name="" id="" class="btn btn-outline-secondary btn-block">常温</button>
+                    <button v-else type="button" name="" id="" class="btn btn-secondary btn-block">常温</button>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-4 my-2">
+                    <button @click="temperature(3)" v-if="!cold" type="button" name="" id="" class="btn btn-outline-primary btn-block">加冰</button>
+                    <button v-else type="button" name="" id="" class="btn btn-primary btn-block">加冰</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 糖 -->
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">糖</h5>
+                <div class="row">
+                  <div class="col-lg-3 col-md-3 col-sm-3 my-2">
+                    <button @click="sugar(1)" v-if="!complete" type="button" name="" id="" class="btn btn-outline-danger btn-block">糖</button>
+                    <button v-else type="button" name="" id="" class="btn btn-danger btn-block">糖</button>
+                  </div>
+                  <div class="col-lg-3 col-md-3 col-sm-3 my-2">
+                    <button @click="sugar(2)" v-if="!half" type="button" name="" id="" class="btn btn-outline-danger btn-block">半糖</button>
+                    <button v-else type="button" name="" id="" class="btn btn-danger btn-block">半糖</button>
+                  </div>
+                  <div class="col-lg-3 col-md-3 col-sm-3 my-2">
+                    <button @click="sugar(3)" v-if="!little" type="button" name="" id="" class="btn btn-outline-danger btn-block">少糖</button>
+                    <button v-else type="button" name="" id="" class="btn btn-danger btn-block">少糖</button>
+                  </div>
+                  <div class="col-lg-3 col-md-3 col-sm-3 my-2">
+                    <button @click="sugar(4)" v-if="!nothing" type="button" name="" id="" class="btn btn-outline-danger btn-block">无糖</button>
+                    <button v-else type="button" name="" id="" class="btn btn-danger btn-block">无糖</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 配料 -->
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">配料</h5>
+                <div class="row">
+                  <div class="col-lg-4 col-md-4 col-sm-4 my-2">
+                    <button @click="dosing(1)" v-if="!milk" type="button" name="" id="" class="btn btn-outline-secondary btn-block">牛奶</button>
+                    <button @click="dosing(1)" v-else type="button" name="" id="" class="btn btn-secondary btn-block">牛奶</button>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-4 my-2">
+                    <button @click="dosing(2)" v-if="!redbean" type="button" name="" id="" class="btn btn-outline-danger btn-block">红豆</button>
+                    <button @click="dosing(2)" v-else type="button" name="" id="" class="btn btn-danger btn-block">红豆</button>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-4 my-2">
+                    <button @click="dosing(3)" v-if="!matcha" type="button" name="" id="" class="btn btn-outline-success btn-block">抹茶</button>
+                    <button @click="dosing(3)" v-else type="button" name="" id="" class="btn btn-success btn-block">抹茶</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6 my-2">
+                    <button @click="dosing(4)" v-if="!raisin" type="button" name="" id="" class="btn btn-outline-info btn-block">葡萄干</button>
+                    <button @click="dosing(4)" v-else type="button" name="" id="" class="btn btn-info btn-block">葡萄干</button>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 my-2">
+                    <button @click="dosing(5)" v-if="!pearl" type="button" name="" id="" class="btn btn-outline-dark btn-block">珍珠</button>
+                    <button @click="dosing(5)" v-else type="button" name="" id="" class="btn btn-dark btn-block">珍珠</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 下单 -->
+            <div v-if="!finish">
+              <a @click="create()" class="btn btn-primary btn-lg btn-block text-light" data-toggle="modal" data-target="#modelId">下单 (๑>؂<๑）</a>
+            </div>
+            <div v-else>
+              <a @click="create()" class="btn btn-danger btn-lg btn-block text-light" data-toggle="modal" data-target="#modelId">再来一单  ψ(｀∇´)ψ</a>
+            </div>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                    <h3 style="text-align: center">已下单 (๑•̀ㅂ•́)و✧</h3>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal" style="width: 250px;margin: 0px auto; display: table">确定</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- 脚本 -->
+    <script>
+      let vm = new Vue({
+        el:'#app',
+        data:{
+          drinks:['柠檬茶','红茶','绿茶','柚子茶','茉莉花茶','黄茶','苦丁茶'],
+
+
+          large:false,
+          medium:false,
+          small:false,
+
+          heat:false,
+          normal:false,
+          cold:false,
+
+          complete:false,
+          half:false,
+          little:false,
+          nothing:false,
+
+          redbean:false,
+          milk:false,
+          matcha:false,
+          raisin:false,
+          pearl:false,
+
+          indentList:new Array(),
+
+          indentName:'',
+          indentSize:'',
+          indentSugar:'',
+          indentoC:'',
+          indentDosing:0,
+
+          finish:false,
+        },
+        
+        methods: {
+
+          spec:function(n){
+            switch(n){
+              case 1:
+                this.large = true;
+                this.medium = false;
+                this.small = false;
+                this.indentSize = '大杯';
+                console.log(this.indentSize);
+                break;
+              case 2:
+                this.large = false;
+                this.medium = true;
+                this.small = false;
+                this.indentSize = '中杯';
+                console.log(this.indentSize);
+               break;
+              case 3:
+                this.large = false;
+                this.medium = false;
+                this.small = true;
+                this.indentSize = '小杯';
+                console.log(this.indentSize);
+                break;
+            }
+          },
+
+          temperature:function(n){
+            switch(n){
+              case 1:
+                this.heat = true;
+                this.normal = false;
+                this.cold = false;
+                this.indentoC = '热';
+                console.log(this.indentoC);
+                break;
+              case 2:
+                this.heat = false;
+                this.normal = true;
+                this.cold = false;
+                this.indentoC = '常温';
+                console.log(this.indentoC);
+                break;
+              case 3:
+                this.heat = false;
+                this.normal = false;
+                this.cold = true;
+                this.indentoC = '加冰';
+                console.log(this.indentoC);
+                break;
+            }
+          },
+
+          sugar:function(n){
+            switch(n){
+              case 1:
+                this.complete = true;
+                this.half = false;
+                this.little = false;
+                this.nothing = false;
+                this.indentSugar = '糖';
+                console.log(this.indentSugar);
+                break;
+              case 2:
+                this.complete = false;
+                this.half = true;
+                this.little = false;
+                this.nothing = false;
+                this.indentSugar = '半糖';
+                console.log(this.indentSugar);
+                break;
+              case 3:
+                this.complete = false;
+                this.half = false;
+                this.little = true;
+                this.nothing = false;
+                this.indentSugar = '少糖';
+                console.log(this.indentSugar);
+                break;
+              case 4:
+                this.complete = false;
+                this.half = false;
+                this.little = false;
+                this.nothing = true;
+                this.indentSugar = '无糖';
+                console.log(this.indentSugar);
+                break;
+            }
+          },
+
+          dosing:function(n){
+            switch(n){
+              case 1:
+                this.milk = !this.milk;
+                if(this.milk){
+                  this.indentDosing += 1;
+                  console.log(this.indentDosing);
+                }else{
+                  this.indentDosing -= 1;
+                }
+                break;
+              case 2:
+                this.redbean = !this.redbean;
+                if(this.redbean){
+                  this.indentDosing += 2;
+                  console.log(this.indentDosing);
+                }else{
+                  this.indentDosing -= 2;
+                }
+                break;
+              case 3:
+                this.matcha = !this.matcha;
+                if(this.matcha){
+                  this.indentDosing += 4;
+                  console.log(this.indentDosing);
+                }else{
+                  this.indentDosing -= 4;
+                }
+                break;
+              case 4:
+                this.raisin = !this.raisin;
+                if(this.raisin){
+                  this.indentDosing += 8;
+                  console.log(this.indentDosing);
+                }else{
+                  this.indentDosing -= 8;
+                }
+                break;
+              case 5:
+                this.pearl = !this.pearl;
+                if(this.pearl){
+                  this.indentDosing += 16;
+                  console.log(this.indentDosing);
+                }else{
+                  this.indentDosing -= 16;
+                }
+                break;
+            };
+          },
+
+          create:function(){
+            this.finish=true;
+            axios.post(`/api/v1/indent`,{
+              name:this.indentName,
+              size:this.indentSize,
+              sugar:this.indentSugar,
+              oC:this.indentoC,
+              dosings:this.indentDosing
+            })
+            .then(res => {
+              console.log(res)
+            })
+            .catch(err => {
+              console.error(err); 
+            })
+          },
+
+        },
+
+        computed: {
+          
+        },
+
+        mounted() {
+          
+        },
+      })
+    </script>
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>

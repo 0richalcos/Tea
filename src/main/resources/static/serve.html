@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <title>Font of tea-后台订单管理</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Vue -->
+    <script src="js/vue.js"></script>
+
+    <!-- axiso -->
+    <script src="js/axios.min.js"></script>
+    
+  </head>
+  <body>
+    <!-- 展板 -->
+    <div class="jumbotron jumbotron-fluid bg-success text-light py-3">
+      <div class="container">
+          <h1 class="display-3 ">Fond of tea</h1>
+          <h3><span class="badge badge-warning">后台订单管理</span></h3>
+      </div>
+    </div>
+    <!-- 导航 -->
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item">
+        <a class="nav-link active bg-success" href="/1">后台订单管理</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="history">历史订单</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="info">订单统计</a>
+      </li>
+    </ul>
+    <!-- 容器 -->
+    <div id="app" class="container-fluid">
+        <div class="row">
+            <!-- 下单 -->
+            
+            <!-- 订单 -->
+            <div class="col-lg-12">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th style="width:10%">饮品</th>
+                      <th style="width:10%">规格</th>
+                      <th style="width:10%">糖</th>
+                      <th style="width:10%">温度</th>
+                      <th style="width:20%">辅料</th>
+                      <th style="width:40%">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(indents, index) in indentList" :key="index">
+                      <td>{{indents.name}}</td>
+                      <td>{{indents.size}}</td>
+                      <td>{{indents.sugar}}</td>
+                      <td>{{indents.oC}}</td>
+                      <td>{{indents.dosings}}</td>
+                      <td>
+                        <div class="row">
+                          <!-- <div class="col-lg-3 col-sm-12">
+                              <button type="button" class="btn btn-warning btn-block">锁定订单</button>
+                          </div> -->
+                          <div class="col-lg-4 col-sm-12">
+                              <!-- 修改订单 -->
+                              <button @click="edit(indents.id)" type="button" class="btn btn-info btn-block"  data-toggle="modal" data-target="#modelId">修改订单</button>
+
+                              <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title">修改订单</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <!-- 编辑饮品 -->
+                                      <div class="form-group">
+                                        <label for="">饮品</label>
+                                        <select v-model="indentEdit.name" class="form-control" name="" id="">
+                                          <option v-for="drink in drinks" :key="index">{{drink}}</option>
+                                        </select>
+                                      </div>
+                                      <!-- 编辑规格 -->
+                                      <div class="form-group">
+                                        <label for="">规格</label>
+                                        <select  v-model="indentEdit.size" class="form-control" name="" id="">
+                                          <option v-for="s in sizes" :key="index">{{s}}</option>
+                                        </select>
+                                      </div>
+                                      <!-- 编辑糖 -->
+                                      <div class="form-group">
+                                        <label for="">糖</label>
+                                        <select  v-model="indentEdit.sugar" class="form-control" name="" id="">
+                                          <option v-for="ss in sugars" :key="index">{{ss}}</option>
+                                        </select>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="">温度</label>
+                                        <select  v-model="indentEdit.oC" class="form-control" name="" id="">
+                                          <option v-for="o in oCs" :key="index">{{o}}</option>
+                                        </select>
+                                      </div>
+                                      <div class="form-group">
+                                        <div class="form-check form-check-inline" v-for="dosing in dosings">
+                                          <label class="form-check-label mx-3" :key="index">
+                                            <input v-model="dosingEdit" class="form-check-input" type="checkbox" :value="dosing"> {{dosing}}
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger" data-dismiss="modal" style="width: 250px">取消</button>
+                                      <button @click="update()" type="button" class="btn btn-primary" data-dismiss="modal" style="width: 250px">保存</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                          </div>
+                          <div class="col-lg-4 col-sm-12">
+                            <button @click="isFinish(indents.id)" type="button" class="btn btn-primary btn-block">完成订单</button>
+                        </div>
+                        <div class="col-lg-4 col-sm-12">
+                            <button type="button" class="btn btn-danger  btn-block" data-toggle="modal" data-target="#modelId1">取消订单</button>
+                            
+                            <!-- Modal -->
+                            <div class="modal fade" id="modelId1" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title">取消订单？</h4>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal" style="width: 250px">点错了</button>
+                                    <button  @click="remove(indents.id)" type="button" class="btn btn-danger btn-lg"  data-dismiss="modal" style="width: 250px">确定</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 脚本 -->
+
+    <script>
+      let vm = new Vue({
+        el:'#app',
+        data:{
+          indentList:new Array(),
+          indentEdit:{},
+
+          // indentName:'',
+          // indentSize:'',
+          // indentSugar:'',
+          // indentOC:'',
+          // indentDosing:'',
+
+          drinks:['柠檬茶','红茶','绿茶','柚子茶','茉莉花茶','黄茶','苦丁茶'],
+          sizes:['大杯','中杯','小杯'],
+          sugars:['糖','半糖','少糖','无糖'],
+          oCs:['热','常温','加冰'],
+          dosings:['红豆','牛奶','抹茶','葡萄干','珍珠'],
+
+          dosingEdit:undefined,
+        },
+        methods: {
+          edit:function(id){
+            axios.get(`/api/v1/indent/${id}`)
+            .then(res => {
+              console.log(res);
+              this.indentEdit = res.data;
+              this.dosingEdit = this.indentEdit.dosings.split(",")
+            })
+            .catch(err => {
+              console.error(err); 
+            })
+          },
+
+          update:function(){
+            this.indentEdit.dosings = this.dosingEdit.join();
+            axios.put(`/api/v1/indent/${this.indentEdit.id}`,this.indentEdit)
+            .then(res => {
+              console.log(res);
+              axios.get(`/api/v1/indent`)
+              .then(res => {
+                console.log(res);
+                this.indentList = res.data;
+              })
+              .catch(err => {
+                console.error(err); 
+              })
+            })
+            .catch(err => {
+              console.error(err); 
+            })
+          },
+
+          isFinish:function(id){
+            axios.get(`/api/v1/indent/${id}`)
+            .then(res => {
+              console.log(res)
+              this.indentEdit = res.data;
+              this.indentEdit.finish = 1;
+              axios.put(`/api/v1/indent/${this.indentEdit.id}`,this.indentEdit)
+              .then(res => {
+                console.log(res)
+                axios.get(`/api/v1/indent`)
+                .then(res => {
+                  console.log(res)
+                  this.indentList = res.data;
+                })
+                .catch(err => {
+                  console.error(err); 
+                })
+              })
+              .catch(err => {
+                console.error(err); 
+              })
+            })
+            .catch(err => {
+              console.error(err); 
+            })
+          },
+
+          remove:function(id){
+            axios.delete(`api/v1/indent/${id}`)
+            .then(res => {
+              console.log(res);
+              axios.get(`api/v1/indent`)
+              .then(res => {
+                console.log(res);
+                this.indentList = res.data;
+              })
+              .catch(err => {
+                console.error(err); 
+              })
+            })
+            .catch(err => {
+              console.error(err); 
+            })
+          }
+        },
+
+        computed: {
+          
+        },
+
+        mounted() {
+          axios.get(`/api/v1/indent`)
+          .then(res => {
+            console.log(res)
+            this.indentList = res.data;
+          })
+          .catch(err => {
+            console.error(err); 
+          })
+        },
+      })
+
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
