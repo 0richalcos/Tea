@@ -1,3 +1,3 @@
 # Tea
 
-Bootstrap4 + Vue + SpringBoot + SprngMVC + SpringDataJPA
+Bootstrap4 + Vue + SpringBoot + SprngMVC
